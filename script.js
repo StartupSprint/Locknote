@@ -126,6 +126,8 @@ function retrieveNoteText(key) {
     })
         .then((response) => response.json())
         .then((data) => {
+            console.log("Received data from backend:", data); // Add this line for debugging
+
             const noteTextArea = document.getElementById('noteText'); // Get the textarea element
             noteTextArea.value = data.note || ''; // Set the note in the textarea
         })
@@ -134,6 +136,7 @@ function retrieveNoteText(key) {
             alert('Error retrieving note.');
         });
 }
+
 
 
 document.getElementById('refreshButton').addEventListener('click', function () {
