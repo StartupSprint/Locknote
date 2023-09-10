@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $value = $_POST["value"];
 
     // Azure SQL Database connection details
-    $serverName = "tcp:sqldatabaselocknote.database.windows.net,1433";
+    $serverName = "sqldatabaselocknote.database.windows.net";
     $databaseName = "locknotedb";
     $username = "devkiraa";
     $password = "Kiraa@M1670529";
