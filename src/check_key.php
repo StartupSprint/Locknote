@@ -1,5 +1,5 @@
 <?php
-$serverName = "sqldatabaselocknote.database.windows.net";
+$serverName = " sqldatabaselocknote.database.windows.net";
 $databaseName = "locknotedb";
 $username = "devkiraa";
 $password = "Kiraa@M1670529";
