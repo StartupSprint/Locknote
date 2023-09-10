@@ -137,8 +137,6 @@ function retrieveNoteText(key) {
         });
 }
 
-
-
 document.getElementById('refreshButton').addEventListener('click', function () {
     // Send a request to the backend to retrieve the note for the encryption key
     retrieveNoteText(encryptionKey);
