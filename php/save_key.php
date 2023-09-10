@@ -1,47 +1,40 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "admin";
-$dbname = "localnotedb";
+// Azure SQL Database connection details
+$serverName = "tcp:sqldatabaselocknote.database.windows.net,1433";
+$databaseName = "locknotedb";
+$username = "devkiraa";
+$password = "Kiraa@M1670529";
 
-// Create a connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+try {
+    // Establish a connection to Azure SQL Database
+    $conn = new PDO("sqlsrv:server=$serverName;Database=$databaseName", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    // Get the encryption key from the POST request
+    $data = json_decode(file_get_contents("php://input"));
 
-// Get the encryption key from the POST request
-$data = json_decode(file_get_contents("php://input"));
+    if (isset($data->encryptionKey)) {
+        $encryptionKey = $data->encryptionKey;
 
-if (isset($data->encryptionKey)) {
-    $encryptionKey = mysqli_real_escape_string($conn, $data->encryptionKey);
+        // Check if the encryption key exists in the database
+        $checkKeySql = "SELECT * FROM keylist WHERE [key] = ?";
+        $stmt = $conn->prepare($checkKeySql);
+        $stmt->execute([$encryptionKey]);
 
-    // Check if the encryption key exists in the database
-    $checkKeySql = "SELECT * FROM keylist WHERE `key` = '$encryptionKey'";
-    $keyResult = $conn->query($checkKeySql);
+        if ($stmt->rowCount() === 0) {
+            // The encryption key does not exist, insert a new row
+            $insertSql = "INSERT INTO keylist ([key], note) VALUES (?, '')";
+            $stmt = $conn->prepare($insertSql);
+            $stmt->execute([$encryptionKey]);
 
-    if ($keyResult->num_rows === 0) {
-        // The encryption key does not exist, insert a new row
-        $insertSql = "INSERT INTO keylist (`key`, note) VALUES ('$encryptionKey', '')";
-
-        if ($conn->query($insertSql) === TRUE) {
-            $response = array('message' => 'Key saved successfully');
-            echo json_encode($response);
+            echo json_encode(['message' => 'Key saved successfully']);
         } else {
-            $response = array('message' => 'Error saving key');
-            echo json_encode($response);
+            echo json_encode(['message' => 'Key already exists']);
         }
     } else {
-        $response = array('message' => 'Key already exists');
-        echo json_encode($response);
+        echo json_encode(['message' => 'Encryption key not provided']);
     }
-} else {
-    $response = array('message' => 'Encryption key not provided');
-    echo json_encode($response);
+} catch (PDOException $e) {
+    die("Error connecting to SQL Server: " . $e->getMessage());
 }
-
-// Close the database connection
-$conn->close();
 ?>

@@ -4,26 +4,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $key = $_POST["key"];
     $value = $_POST["value"];
 
-    // Perform database insertion
-    $host = 'localhost'; // Your MySQL server host
-    $username = 'root'; // Your MySQL username
-    $password = 'admin'; // Your MySQL password
-    $database = 'localnotedb'; // Your MySQL database name
+    // Azure SQL Database connection details
+    $serverName = "tcp:sqldatabaselocknote.database.windows.net,1433";
+    $databaseName = "locknotedb";
+    $username = "devkiraa";
+    $password = "Kiraa@M1670529";
 
-    $conn = mysqli_connect($host, $username, $password, $database);
+    try {
+        // Establish a connection to Azure SQL Database
+        $conn = new PDO("sqlsrv:server=$serverName;Database=$databaseName", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
+        // Prepare and execute a query to insert the key-value pair
+        $sql = "INSERT INTO key_value (key_name, value) VALUES (:key, :value)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':key', $key, PDO::PARAM_STR);
+        $stmt->bindParam(':value', $value, PDO::PARAM_STR);
+        $stmt->execute();
 
-    $sql = "INSERT INTO key_value (key_name, value) VALUES ('$key', '$value')";
-
-    if (mysqli_query($conn, $sql)) {
         echo "Data saved successfully.";
-    } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    } catch (PDOException $e) {
+        die("Error connecting to SQL Server: " . $e->getMessage());
     }
-
-    mysqli_close($conn);
 }
 ?>

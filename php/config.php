@@ -1,16 +1,14 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "admin";
-$dbname = "localnotedb";
+$serverName = "tcp:sqldatabaselocknote.database.windows.net,1433";
+$databaseName = "locknotedb";
+$username = "devkiraa";
+$password = "Kiraa@M1670529";
 
-// Create a connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
+try {
+    $conn = new PDO("sqlsrv:server=$serverName;Database=$databaseName", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connected successfully"; // This message indicates a successful connection
+} catch (PDOException $e) {
+    die("Error connecting to SQL Server: " . $e->getMessage());
 }
 ?>
