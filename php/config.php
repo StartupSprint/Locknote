@@ -1,6 +1,6 @@
 <?php
-$serverName = "locknote-server.mysql.database.azure.com";
-$databaseName = "locknote-database";
+$serverName = "sqlsrv:server = tcp:sqldatabaselocknote.database.windows.net,1433";
+$databaseName = "locknotedb";
 $username = "zaumhoclhr";
 $password = "028I348KO1JW16DA$";
 
