@@ -1,9 +1,9 @@
 <?php
 // Create a database connection (replace with your database credentials)
-$servername = "localhost";
-$username = "your_username";
-$password = "your_password";
-$dbname = "your_database_name";
+$servername = "sql211.infinityfree.com";
+$username = "if0_35085005";
+$password = "z93UAb75vWW";
+$dbname = "if0_35085005_locknote";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
