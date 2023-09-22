@@ -1,37 +1,19 @@
-    <?php
-    $serverName = " sqldatabaselocknote.database.windows.net";
-    $databaseName = "locknotedb";
-    $username = "devkiraa";
-    $password = "Kiraa@M1670529";
+<?php
+$servername = "sql211.infinityfree.com";
+$username = "if0_35085005"; // Replace with your MySQL username
+$password = "z93UAb75vWW"; // Replace with your MySQL password
+$dbname = "if0_35085005_locknote"; // Replace with your MySQL database name
 
-    try {
-        $conn = new PDO("sqlsrv:server=$serverName;Database=$databaseName", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
-        // Get the encryption key from the POST request
-        $data = json_decode(file_get_contents("php://input"));
+// Create a connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-        if (isset($data->encryptionKey)) {
-            $encryptionKey = $data->encryptionKey;
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+} else {
+    echo "Connected successfully to database: $dbname"; // This message indicates a successful connection
+}
 
-            // Prepare and execute a query to check if the key exists in the database
-            $sql = "SELECT * FROM keylist WHERE [key] = :encryptionKey";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':encryptionKey', $encryptionKey, PDO::PARAM_STR);
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-                $response = array('exists' => true);
-                echo json_encode($response);
-            } else {
-                $response = array('exists' => false);
-                echo json_encode($response);
-            }
-        } else {
-            $response = array('exists' => false);
-            echo json_encode($response);
-        }
-    } catch (PDOException $e) {
-        die("Error connecting to SQL Server: " . $e->getMessage());
-    }
-    ?>
+// Close the connection when done
+$conn->close();
+?>

@@ -1,8 +1,8 @@
 <?php
-$serverName = "sqlsrv:server = tcp:sqldatabaselocknote.database.windows.net,1433";
-$databaseName = "locknotedb";
-$username = "devkiraa";
-$password = "Kiraa@M1670529";
+$serverName = "sql211.infinityfree.com";
+$databaseName = "if0_35085005_locknote";
+$username = "if0_35085005";
+$password = "z93UAb75vWW";
 
 try {
     $conn = new PDO("sqlsrv:server=$serverName;Database=$databaseName", $username, $password);
