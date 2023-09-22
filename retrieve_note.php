@@ -1,6 +1,5 @@
 <?php
 $key = $_POST['key'];
-$note = $_POST['note'];
 
 // Database connection settings
 $servername = "sql211.infinityfree.com";
@@ -16,15 +15,16 @@ if ($conn->connect_error) {
 
 // Escape the input to prevent SQL injection (better to use prepared statements)
 $key = $conn->real_escape_string($key);
-$note = $conn->real_escape_string($note);
 
-// Insert the data into the database
-$sql = "INSERT INTO notes (code, note) VALUES ('$key', '$note')";
+// Query the database to retrieve the note based on the key
+$sql = "SELECT note FROM notes WHERE code = '$key'";
+$result = $conn->query($sql);
 
-if ($conn->query($sql) === TRUE) {
-    echo "success";
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    echo $row['note'];
 } else {
-    echo "error";
+    echo 'not_found';
 }
 
 $conn->close();
