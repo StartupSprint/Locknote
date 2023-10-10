@@ -18,8 +18,20 @@ if ($conn->connect_error) {
 $key = $conn->real_escape_string($key);
 $note = $conn->real_escape_string($note);
 
-// Insert the data into the database
-$sql = "INSERT INTO notes (code, note) VALUES ('$key', '$note')";
+// Check if the key exists in the database
+$sql = "SELECT COUNT(*) AS count FROM notes WHERE code = '$key'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    if ($row['count'] > 0) {
+        // Key exists, update the existing note
+        $sql = "UPDATE notes SET note = '$note' WHERE code = '$key'";
+    } else {
+        // Key doesn't exist, insert a new row
+        $sql = "INSERT INTO notes (code, note) VALUES ('$key', '$note')";
+    }
+}
 
 if ($conn->query($sql) === TRUE) {
     echo "success";
