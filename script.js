@@ -29,6 +29,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Call retrieveNoteByKey when the page loads to check for existing notes
+    retrieveNoteByKey(encryptionKeyInput.value);
+
     enterButton.addEventListener("click", function () {
         const key = encryptionKeyInput.value;
         if (key.trim() !== "") {
@@ -43,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
             message.textContent = "Please enter a valid Encryption Key.";
         }
     });
-    
+
     saveButton.addEventListener("click", function () {
         const key = encryptionKeyInput.value;
         const note = noteText.value;
